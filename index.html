@@ -389,14 +389,24 @@
         </div>
     </div>
 
-    <!-- Эффективность кэша -->
+    <!-- Экономия на API -->
     <div class="section">
-        <div class="section-title">📊 Эффективность кэша</div>
-        <div style="text-align: center;">
-            <span class="efficiency-badge" id="cache-efficiency">—%</span>
-            <p style="color: var(--tg-theme-hint-color); font-size: 0.8rem; margin-top: 8px;">
-                Чем выше — тем меньше расходы на API
-            </p>
+        <div class="section-title">💰 Экономия на API</div>
+        <div style="display: flex; justify-content: space-around; text-align: center;">
+            <div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #2ecc71;" id="money-saved">0 ₽</div>
+                <div style="font-size: 0.75rem; color: var(--tg-theme-hint-color);">Сэкономлено</div>
+            </div>
+            <div>
+                <div style="font-size: 1.5rem; font-weight: bold; color: #e74c3c;" id="money-spent">0 ₽</div>
+                <div style="font-size: 0.75rem; color: var(--tg-theme-hint-color);">Потрачено</div>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 12px; padding: 8px; background: rgba(46,204,113,0.1); border-radius: 8px;">
+            <span style="font-size: 0.8rem;">Без кэша было бы: <b id="money-total">0 ₽</b></span>
+        </div>
+        <div style="text-align: center; margin-top: 8px; font-size: 0.7rem; color: var(--tg-theme-hint-color);">
+            Цена запроса: <span id="cost-per-request">0.15</span> ₽
         </div>
     </div>
 
@@ -510,14 +520,11 @@
                 document.getElementById('api-queries').textContent = data.api_queries;
                 document.getElementById('unique-users').textContent = data.unique_users;
 
-                // Эффективность кэша
-                const efficiency = data.total_queries > 0
-                    ? Math.round((data.cached_queries / data.total_queries) * 100)
-                    : 0;
-                const effBadge = document.getElementById('cache-efficiency');
-                effBadge.textContent = efficiency + '%';
-                effBadge.className = 'efficiency-badge ' +
-                    (efficiency >= 50 ? 'efficiency-good' : efficiency >= 25 ? 'efficiency-ok' : 'efficiency-bad');
+                // Экономия в рублях
+                document.getElementById('money-saved').textContent = data.money_saved.toFixed(2) + ' ₽';
+                document.getElementById('money-spent').textContent = data.money_spent.toFixed(2) + ' ₽';
+                document.getElementById('money-total').textContent = data.money_total_if_no_cache.toFixed(2) + ' ₽';
+                document.getElementById('cost-per-request').textContent = data.cost_per_request;
 
                 const fileList = document.getElementById('file-list');
                 if (data.files.length === 0) {
